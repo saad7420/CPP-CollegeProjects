@@ -3,7 +3,7 @@
 #include <string>
 #include <iomanip>
 using namespace std;
-int globalID; // keep track of student's count
+int globalID, lastID; // keep track of student's count
 void row_design(int d)
 {
     switch (d)
@@ -24,7 +24,7 @@ void row_design(int d)
              << "Skills" << '\n';
         break;
     case 1:
-        cout << "----|---------------------------|---------------------------|-------------------|---------------------------|-------|-----|-----|-----|------|--------------|-------\n";
+        cout << "\n\n----|---------------------------|---------------------------|-------------------|---------------------------|-------|-----|-----|-----|------|--------------|-------\n";
         break;
     case 2:
         cout << "____|___________________________|___________________________|___________________|___________________________|_______|_____|_____|_____|______|______________|_______\n";
@@ -55,9 +55,7 @@ public:
         // write code to read the srNo = globalID
         else
         {
-            row_design(1); // printing the output designs
-            row_design(0);
-            row_design(2);
+            globalID = 0;  // initialized the global id to keep track of counts
             readf >> srno; // 1st attemp to reading the file
             readf.ignore();
             getline(readf, sname);
@@ -76,7 +74,7 @@ public:
             getline(readf, skills);
             while (!readf.eof())
             {
-                DisplayRecords();
+                ++globalID;
                 readf >> srno;
                 readf.ignore();
                 getline(readf, sname);
@@ -94,11 +92,12 @@ public:
                 readf.ignore();
                 getline(readf, skills);
             }
-            globalID = srno;
+            lastID = srno;
+            cout << " ~   success : Student Database has data of [ " << globalID << " ] students \n";
             readf.close();
         }
     }
-    void DisplayRecords() // 1 : Display runtime records
+    void DisplayRecords() // Display runtime records
     {
         cout << setw(4) << left << srno
              << '|' << setw(27) << left << sname
@@ -123,36 +122,59 @@ public:
         }
         else
         {
-            ifstream read("D:\\Students_Database.txt");
-            if (read.fail())
+            ifstream readf("D:\\Students_Database.txt");
+            if (readf.fail())
             {
                 cout << " ~   Error : Students_Database.txt file not found !!!\n";
-                read.close();
+                readf.close();
                 system("pause");
                 //                main();
             }
-            row_design(1);
-            row_design(0);
-            row_design(2);
-            while (!read.eof())
+            else
             {
-                read >> srno;
-                read.ignore();
-                getline(read, sname);
-                getline(read, fname);
-                getline(read, dob);
-                getline(read, department);
-                read >> semester;
-                read >> rolNo;
-                read >> gender;
-                read >> age;
-                read >> gpa;
-                read.ignore();
-                getline(read, city);
-                getline(read, skills);
-                DisplayRecords();
+                row_design(1); // printing the output designs
+                row_design(0);
+                row_design(2);
+                readf >> srno; // 1st attemp to reading the file
+                readf.ignore();
+                getline(readf, sname);
+                getline(readf, fname);
+                readf >> gender;
+                readf.ignore();
+                getline(readf, dob);
+                readf >> age;
+                readf.ignore();
+                getline(readf, city);
+                getline(readf, department);
+                readf >> semester;
+                readf >> rolNo;
+                readf >> gpa;
+                readf.ignore();
+                getline(readf, skills);
+                while (!readf.eof())
+                {
+                    DisplayRecords();
+                    readf >> srno;
+                    readf.ignore();
+                    getline(readf, sname);
+                    getline(readf, fname);
+                    readf >> gender;
+                    readf.ignore();
+                    getline(readf, dob);
+                    readf >> age;
+                    readf.ignore();
+                    getline(readf, city);
+                    getline(readf, department);
+                    readf >> semester;
+                    readf >> rolNo;
+                    readf >> gpa;
+                    readf.ignore();
+                    getline(readf, skills);
+                }
             }
-            read.close();
+            readf.close();
+            cout << "\n\n\t ~ ";
+            system("pause");
         }
     }
     void AddRecords()
