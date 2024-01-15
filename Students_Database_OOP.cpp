@@ -277,9 +277,9 @@ int main() // MAIN function
     char choice;
     cout << "\n          ---------- Students Database ---------\n";
     cout << "\n\t\t 1 : Display all records";
-    cout << "\n\t\t 2 : Update an information";
-    cout << "\n\t\t 3 : Add new/fresh records";
-    cout << "\n\t\t 4 : Search in the records";
+    cout << "\n\t\t 2 : Update/Delete records";
+    cout << "\n\t\t 3 : Add new records";
+    cout << "\n\t\t 4 : Search in records";
     cout << "\n\t\t 0 : Exit the SDB Program\n";
 reselectMain:
     cout << "\n\t\t ~   Enter your choice here :: ";
