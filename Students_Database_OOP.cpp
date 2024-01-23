@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
+#include <ctime>
+#include <algorithm>
 using namespace std;
 int globalID, lastID; // keep track of student's count
 void row_design(int d)
@@ -9,25 +11,24 @@ void row_design(int d)
     switch (d)
     {
     case 0:
-        cout << setw(3) << left << "Sr"
-             << " | " << setw(25) << left << "STUDENTS"
-             << " | " << setw(25) << left << "PARENTS"
-             << " | " << setw(17) << left << "D.O.B"
-             << " | " << setw(25) << left << "DEPARTMENT"
-             << " | " << setw(5) << left << "SMSTR"
-             << " | " << setw(3) << left << "ROL"
+        cout << setw(3) << left << " Sr"
+             << " | " << setw(19) << left << "STUDENT NAMES"
+             << " | " << setw(19) << left << "PARENTS NAMES"
+             << " | " << setw(9) << left << "D.O.B"
+             << " | " << setw(22) << left << "DEPARTMENT NAMES"
+             << " |" << setw(5) << left << "SMSTR"
+             << "| " << setw(3) << left << "ROL"
              << " | " << setw(3) << left << "GEN"
              << " | " << setw(3) << left << "AGE"
              << " | " << setw(4) << left << "CGPA"
-             << " | " << setw(12) << left << "CITY"
-             << " | "
-             << "Skills" << '\n';
+             << " | " << setw(7) << left << "CITY"
+             << " | " << setw(12) << left << "SKILLS" << '\n';
         break;
     case 1:
-        cout << "\n\n----|---------------------------|---------------------------|-------------------|---------------------------|-------|-----|-----|-----|------|--------------|-------\n";
+        cout << "\n\n----|---------------------|---------------------|-----------|------------------------|-----|-----|-----|-----|------|---------|-------------\n";
         break;
     case 2:
-        cout << "____|___________________________|___________________________|___________________|___________________________|_______|_____|_____|_____|______|______________|_______\n";
+        cout << "____|_____________________|_____________________|___________|________________________|_____|_____|_____|_____|______|_________|_____________\n";
         break;
     default:
         break;
@@ -37,7 +38,7 @@ void row_design(int d)
 class StudentDatabase // MAIN class
 {
 private:
-    int semester, age = 22, srno, rolNo;
+    int semester, age, srno, rolNo;
     float gpa;
     char gender;
     string sname, fname, department, skills, dob, city;
@@ -97,26 +98,12 @@ public:
             readf.close();
         }
     }
-    void DisplayRecords() // Display runtime records
-    {
-        cout << setw(4) << left << srno
-             << '|' << setw(27) << left << sname
-             << '|' << setw(27) << left << fname
-             << '|' << setw(19) << left << dob
-             << '|' << setw(27) << left << department
-             << "| " << setw(6) << left << semester
-             << "| " << setw(4) << left << rolNo
-             << "| " << setw(4) << left << gender
-             << "| " << setw(4) << left << age
-             << "| " << setw(5) << left << gpa
-             << '|' << setw(14) << left << city
-             << '|' << skills << '\n';
-    }
     void DisplayFileRecords() // 1 : Display infile records
     {
         if (globalID == 0)
         {
-            cout << " ~   Error : No Records available yet !!!\n";
+            cout << "\t ~   Error : No Records available yet !!!\n";
+            cout << "\t\t";
             system("pause");
             // main();
         }
@@ -125,13 +112,14 @@ public:
             ifstream readf("D:\\Students_Database.txt");
             if (readf.fail())
             {
-                cout << " ~   Error : Students_Database.txt file not found !!!\n";
+                cout << "\t ~   Error : Students_Database.txt file not found !!!\n";
                 readf.close();
                 system("pause");
                 //                main();
             }
             else
             {
+                system("cls");
                 row_design(1); // printing the output designs
                 row_design(0);
                 row_design(2);
@@ -173,7 +161,7 @@ public:
                 }
             }
             readf.close();
-            cout << "\n\n\t ~ ";
+            cout << "\n\n\t\t~  ";
             system("pause");
         }
     }
@@ -181,36 +169,39 @@ public:
     {
         system("cls");
         cout << "\n          ---------- Students Database ---------\n\n";
-        cout << " ~\tEnter Records for serial number ( " << ++globalID << " )\n";
+        cout << " ~\t Enter Records for serial number ( " << ++globalID << " )\n";
         srno = globalID;
         cin.ignore();
-        cout << "\t Enter Student's Education Department   :: ";
+        cout << " *\t Enter Student's Education Department   :: ";
         getline(cin, department);
-        cout << "\t Enter Student's Semester Number        :: ";
+        cout << " *\t Enter Student's Semester Number        :: ";
         cin >> semester;
-        cout << "\t Enter Student's Roll Number/ ID        :: ";
+        cout << " *\t Enter Student's ID/Roll Number         :: ";
         cin >> rolNo;
         cin.ignore();
-        cout << "\t Enter Student's Name                   :: ";
+        cout << " *\t Enter Student's Name                   :: ";
         getline(cin, sname);
-        cout << "\t Enter Student's Father Name            :: ";
+        cout << " *\t Enter Student's Father Name            :: ";
         getline(cin, fname);
-        cout << "\t {date | month name/number | year | day}\n";
-        cout << "\t Enter Student's Date of Birth          :: ";
+        cout << " *\t Enter Date of Birth (DDMMYYYY)         :: ";
         getline(cin, dob);
-        cout << "\t Enter Student's gender M/F/O/N         :: ";
+        cout << " *\t Enter Student's gender M/F/O/N         :: ";
         cin >> gender;
-        cout << "\t Enter current maintained CGPA          :: ";
+        cout << " *\t Enter current maintained CGPA          :: ";
         cin >> gpa;
         cin.ignore();
-        cout << "\t Enter Student's residence city name    :: ";
+        cout << " *\t Enter Student's residence city name    :: ";
         getline(cin, city);
-        cout << "\t Enter Student's Extracurricular Skills :: ";
+        cout << " *\t Enter Student's Extracurricular Skills :: ";
         getline(cin, skills);
 
+        date_format();
+        row_design(1);
+        row_design(0);
+        row_design(2);
         DisplayRecords(); // displaying the newly given records for confirmation
         char choice;
-        cout << "\n\t\t ~ Are you sure to save this record? (y/n) : ";
+        cout << "\n ~\t Are you sure to save this record? (y/n) : ";
         cin >> choice;
         if (choice == 'n' || choice == 'N')
         {
@@ -220,7 +211,6 @@ public:
         else if (choice == 'y' || choice == 'Y')
         {
             WriteRecords(); // writing & saving the confirmed records for permanant future use in Student Database.txt file
-            globalID++;     // a new record added successfully
             system("cls");
             cout << "\n          ---------- Students Database ---------\n\n";
             cout << "\t\t 1 : Add more Students\n";
@@ -238,6 +228,423 @@ public:
             // else
             // main(); // jumping to the MAIN function
         }
+    }
+    void sortDATA()
+    {
+        system("cls");
+        char choice;
+        cout << "\n          ---------- Sorting the Database ---------\n";
+        cout << "\n\t 1 : Sort by Student's NAMES (alphabetically)";
+        cout << "\n\t 2 : Sort by Department Names(alphabetically)";
+        cout << "\n\t 3 : Sort by Semester Number(ascending order)";
+        cout << "\n\t 4 : Sort by Student Roll no(ascending order)";
+        cout << "\n\t 5 : Sort by Student's CGPA (ascending order)";
+        cout << "\n\t 6 : Back to main menu of progam"; // no need to write the code, since it'll automatically directed to the main()
+        cout << "\n\t 7 : Back to Serial vise sorting\n";
+        cout << "\n\t 0 : Exit the SDB Program\n";
+        cout << "\n\t ~   Enter your choice here :: ";
+        cin >> choice;
+        if (choice == '0')
+        {
+            cout << "\t ~   Program exited successfully !!! \n\n";
+            exit(0);
+        }
+        else if (choice == '1')
+        {
+            data_sorting_and_filing('N'); // sort data according to 'N': Names
+        }
+        else if (choice == '2')
+        {
+            data_sorting_and_filing('D'); // 'D': Department vise
+        }
+        else if (choice == '3')
+        {
+            data_sorting_and_filing('S'); // 'S": Semester vise
+        }
+        else if (choice == '4')
+        {
+            data_sorting_and_filing('R'); // 'R': Roll number vise
+        }
+        else if (choice == '5')
+        {
+            data_sorting_and_filing('C'); // 'C': CGPA or marks
+        }
+        else if (choice == '6')
+        {
+            goto SortingLOOP; // towards main menu
+        }
+        else if (choice == '7')
+        {
+            data_sorting_and_filing('0'); // sort back to the serial number vise
+        }
+        else
+        {
+            cout << "\t ~   Error : invalid input by user";
+            system("pause");
+            sortDATA();
+        }
+    SortingLOOP:
+        cout << "\t ~   Error : invalid input by user";
+        /*
+     . Always checking & sorting the serial number in ascending order after updating/deleting the records
+        */
+    }
+    void searchRecords()
+    {
+        if (globalID == 0)
+        {
+            cout << "\t ~   Error : No Records available yet !!!\n";
+            cout << "\t\t";
+            system("pause");
+        }
+        else
+        {
+            system("cls");
+            char choice;
+            cout << "\n          ---------- Sorting the Database ---------\n";
+            cout << "\n\t\t 1 : Search by Gender";
+            cout << "\n\t\t 2 : Search by Roll Numbers";
+            cout << "\n\t\t 3 : Search by Student Names ";
+            cout << "\n\t\t 4 : Search by Serial Numbers";
+            cout << "\n\t\t 5 : Search by Semester Number";
+            cout << "\n\t\t 6 : Search by Locality (city)";
+            cout << "\n\t\t 7 : Search by Department Names";
+            cout << "\n\t\t 8 : Back to main menu of progam\n"; // no need to write the code, since it'll automatically directed to the main()
+            cout << "\n\t\t 0 : Exit the SDB Program";
+            cout << "\n\t\t ~   Enter your choice here :: ";
+            cin >> choice;
+            if (choice == '0')
+            {
+                cout << "\t\t ~   Program exited successfully !!! \n\n";
+                exit(0);
+            }
+            else if (choice == '1')
+            {
+                data_searching('G'); // gender
+                searchRecords();
+            }
+            else if (choice == '2')
+            {
+                data_searching('R'); // roll number
+                searchRecords();
+            }
+            else if (choice == '3')
+            {
+                data_searching('N'); // name
+                searchRecords();
+            }
+            else if (choice == '4')
+            {
+                data_searching('s'); // serial number
+                searchRecords();
+            }
+            else if (choice == '5')
+            {
+                data_searching('S'); // semester number
+                searchRecords();
+            }
+            else if (choice == '6')
+            {
+                data_searching('C'); // city
+                searchRecords();
+            }
+            else if (choice == '7')
+            {
+                data_searching('D'); // department
+                searchRecords();
+            }
+            else if (choice == '8')
+            {
+                goto SearchingLoop; // towards main menu
+                searchRecords();
+            }
+            else
+            {
+                cout << "\t\t ~   Error : invalid input by user\n\t\t ~   ";
+                system("pause");
+                searchRecords();
+            }
+        SearchingLoop:
+            cout << "\t ~   Welcome Back to main menu\n";
+        }
+    }
+    void updateDeleteRecords()
+    {
+        if (globalID == 0)
+        {
+            cout << "\t ~   Error : No Records available yet !!!\n";
+            cout << "\t\t";
+            system("pause");
+        }
+        else
+        {
+            system("cls");
+            char choice;
+            cout << "\n\t\t-------- Updating the Database ---------\n\n";
+            cout << "\n\t\t\t 1 : Update Records";
+            cout << "\n\t\t\t 2 : Delete Records";
+            cout << "\n\t\t\t 3 : Back to main menu";
+            cout << "\n\t\t\t 0 : Exit SDB Program\n";
+            cout << "\n\t\t\t ~   Enter choice here :: ";
+            cin >> choice;
+            if (choice == '0')
+            {
+                cout << "\t\t ~   Program exited successfully !!! \n\n";
+                exit(0);
+            }
+            else if (choice == '1')
+            {
+                updateRecords();
+                updateDeleteRecords();
+            }
+            else if (choice == '2')
+            {
+                deleteRecords();
+                updateDeleteRecords();
+            }
+            else if (choice == '3')
+            {
+                goto updateAgain;
+                updateDeleteRecords();
+            }
+            else
+            {
+                cout << "\t\t ~   Error : invalid input by user\n\t\t ~   ";
+                system("pause");
+                updateDeleteRecords();
+            }
+        updateAgain:
+            cout << "\t ~   Welcome Back to main menu\n";
+        }
+    }
+    ~StudentDatabase()
+    {
+        cout << "\n\n                         CodeBY: Muhammad Afnan Hassan #ITBatch1st\n\n\n";
+    }
+
+private:
+    void updateRecords()
+    {
+        char choice;
+        int given_rolnumber, given_semester, given_serial;
+        string given_name;
+        cout << "\n\t\t~   Enter Student's Name : ";
+        cin.ignore();
+        getline(cin, given_name);
+        cout << "\n\t\t~   Enter  Roll   Number : ";
+        cin >> given_rolnumber;
+        cout << "\n\t\t~   Enter   Semester  No : ";
+        cin >> given_semester;
+
+        // reading file data
+        ifstream read("D:\\Students_Database.txt");
+        if (read.fail())
+        {
+            cout << " ~   Error : Students_Database.txt file not accessible !!!\n";
+            read.close();
+            system("pause");
+            updateDeleteRecords();
+        }
+        // 1st attemp to reading the file
+        read >> srno;
+        read.ignore();
+        getline(read, sname);
+        getline(read, fname);
+        read >> gender;
+        read.ignore();
+        getline(read, dob);
+        read >> age;
+        read.ignore();
+        getline(read, city);
+        getline(read, department);
+        read >> semester;
+        read >> rolNo;
+        read >> gpa;
+        read.ignore();
+        getline(read, skills);
+    }
+    void deleteRecords()
+    {
+    }
+    void DisplayRecords() // Display runtime records
+    {
+        cout << ' ' << setw(3) << srno
+             << '|' << setw(21) << left << sname.substr(0, 21)
+             << '|' << setw(21) << left << fname.substr(0, 21)
+             << '|' << setw(11) << left << dob.substr(0, 11)
+             << '|' << setw(24) << left << department.substr(0, 24)
+             << "|  " << setw(3) << left << semester
+             << "| " << setw(4) << left << rolNo
+             << "| " << setw(4) << left << gender
+             << "| " << setw(4) << left << age
+             << "| " << setw(5) << left << gpa
+             << '|' << setw(9) << left << city.substr(0, 9)
+             << '|' << setw(13) << left << skills.substr(0, 13) << '\n';
+    }
+    void data_searching(char search_type)
+    {
+        int given_rolnumber, given_serial, given_semester;
+        char given_gender, filed_gender;
+        string given_name, given_city, given_department, filed_name, filed_city, filed_department;
+        bool found = 0;
+        if (search_type == 'R')
+        {
+            cout << "\n\t\t ~   Enter Student's Roll Number :: ";
+            cin >> given_rolnumber;
+        }
+        else if (search_type == 's')
+        {
+            cout << "\n\t\t ~   Enter Recorded Serial Number :: ";
+            cin >> given_serial;
+        }
+        else if (search_type == 'S')
+        {
+            cout << "\n\t\t ~   Enter Semester Number :: ";
+            cin >> given_semester;
+        }
+        else if (search_type == 'G')
+        {
+            cout << "\n\t\t ~   Enter Gender (M/F/O/N) :: ";
+            cin >> given_gender;
+            if (given_gender == 'M' || given_gender == 'F' || given_gender == 'O' || given_gender == 'N')
+                given_gender += 32; // conversion to lowercase letter
+        }
+        else if (search_type == 'N')
+        {
+            cin.ignore();
+            cout << "\n\t\t ~   Enter Student's Name :: ";
+            getline(cin, given_name);
+            transform(given_name.begin(), given_name.end(), given_name.begin(), ::tolower);
+        }
+        else if (search_type == 'C')
+        {
+            cin.ignore();
+            cout << "\n\t\t ~   Enter City Name :: ";
+            getline(cin, given_city);
+            transform(given_city.begin(), given_city.end(), given_city.begin(), ::tolower);
+        }
+        else if (search_type == 'D')
+        {
+            cin.ignore();
+            cout << "\n\t\t ~   Enter Department Name :: ";
+            getline(cin, given_department);
+            transform(given_department.begin(), given_department.end(), given_department.begin(), ::tolower);
+        }
+        system("cls");
+        row_design(1); // printing the output designs
+        row_design(0);
+        row_design(2);
+        ifstream read("d:\\Students_Database.txt");
+        if (read.fail())
+        {
+            cout << "\n\t\t ~   File not found !!!\n";
+            read.close();
+        }
+        read >> srno; // 1st attemp to reading the file
+        read.ignore();
+        getline(read, sname);
+        getline(read, fname);
+        read >> gender;
+        read.ignore();
+        getline(read, dob);
+        read >> age;
+        read.ignore();
+        getline(read, city);
+        getline(read, department);
+        read >> semester;
+        read >> rolNo;
+        read >> gpa;
+        read.ignore();
+        getline(read, skills);
+        while (!read.eof())
+        {
+            filed_name = sname; // assigning filed values to new variables to avoid direct manipulations
+            filed_city = city;
+            filed_department = department;
+            filed_gender = gender;
+            transform(filed_name.begin(), filed_name.end(), filed_name.begin(), ::tolower); // conversions to lower case letter for better comparison
+            transform(filed_city.begin(), filed_city.end(), filed_city.begin(), ::tolower);
+            transform(filed_department.begin(), filed_department.end(), filed_department.begin(), ::tolower);
+            if (filed_gender == 'M' || filed_gender == 'F' || filed_gender == 'O' || filed_gender == 'N')
+                filed_gender += 32; // conversion to lowercase letter
+            // displaying the compared results
+            if (search_type == 'R')
+            {
+                if (given_rolnumber == rolNo)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            else if (search_type == 's')
+            {
+                if (given_serial == srno)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            else if (search_type == 'S')
+            {
+                if (given_semester == semester)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            else if (search_type == 'G')
+            {
+                if (given_gender == filed_gender)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            else if (search_type == 'N')
+            {
+                if (filed_name.find(given_name) < 51)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            else if (search_type == 'C')
+            {
+                if (filed_city.find(given_city) < 51)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            else if (search_type == 'D')
+            {
+                if (filed_department.find(given_department) < 51)
+                {
+                    found = 1;
+                    DisplayRecords();
+                }
+            }
+            read >> srno;
+            read.ignore();
+            getline(read, sname);
+            getline(read, fname);
+            read >> gender;
+            read.ignore();
+            getline(read, dob);
+            read >> age;
+            read.ignore();
+            getline(read, city);
+            getline(read, department);
+            read >> semester;
+            read >> rolNo;
+            read >> gpa;
+            read.ignore();
+            getline(read, skills);
+        }
+        if (!found)
+            cout << "\n\n\n\n\t\t ~   Error : No Records Matched (Record NOT Found) !!!";
+        cout << "\n\n\t\t ~   ";
+        system("pause");
     }
     void WriteRecords()
     {
@@ -264,7 +671,371 @@ public:
             write << skills << '\n';
 
             write.close();
-            cout << "\t\t ~   Record saved successfully !!! \n\n";
+            cout << " ~\t  Record saved successfully !!! \n ~\t  ";
+            system("pause");
+        }
+    }
+    void date_format()
+    {
+        int dy, mn, yr; // to catch the user date of birth dd-mm-yyyy
+        int date;
+        char dash = '-';
+        date = stoi(dob);      // string to integer conversion
+        if (dob.length() == 8) // calculations start here
+        {
+            dy = date / 1000000;
+            date %= 1000000;
+            mn = date / 10000;
+            yr = date % 10000;
+        }
+        else if (dob.length() == 6)
+        {
+            dy = date / 100000;
+            date %= 100000;
+            mn = date / 10000;
+            yr = date % 10000;
+        }
+        if (dob.length() == 7)
+        {
+            yr = date % 10000;
+            date /= 10000;
+            if (date % 100 > 12)
+            {
+                dy = date / 10;
+                mn = date % 10;
+            }
+            else
+            {
+                dy = date / 100;
+                mn = date % 100;
+            }
+        }
+        // conversion from integer dates into a string
+        dob = to_string(dy) + "-" + to_string(mn) + "-" + to_string(yr);
+        // calculating the age at the time of record added
+        ageCalculation(dy, mn, yr); // passed by value (!reference)
+    }
+    void ageCalculation(int dy, int mn, int yr)
+    {
+        char charDATE[12]; // to use in the strftime() of ctime, we always need char array
+        string presentDATE;
+        time_t t = time(0);                                // fetches the local time of machine
+        strftime(charDATE, 12, "%d/%m/%Y", localtime(&t)); // charDATE will be assigned dd/mm/yyyy date format
+        presentDATE = charDATE;                            // char to string conversion
+        // int dayPresent = stoi(presentDATE.substr(0, 2));   // days assignment
+        // int monthPresent = stoi(presentDATE.substr(3, 2)); // months assignment
+        int yearPresent = stoi(presentDATE.substr(6)); // years assignment
+        age = yearPresent - yr;
+        // would code soon for calculating exact age including months,days,weeks and regarding leap Year & other factors
+    }
+    void data_sorting_and_filing(char sort_type)
+    {
+        int arr_ROLLnumber[globalID], arr_Semester[globalID], arr_SerialNumber[globalID];
+        int i = 0, x, y, tempN;
+        string arr_SNAME[globalID], arr_Department[globalID];
+        string tempS;
+        float arr_CGPA[globalID];
+
+        if (globalID == 0)
+        {
+            cout << "\t ~   Error : No Records available yet !!!\n";
+            cout << "\t\t";
+            system("pause");
+        }
+        else
+        {
+            ifstream read("d:\\Students_Database.txt");
+            if (read.fail())
+            {
+                cout << "\nFile not found !!!\n";
+                read.close();
+            }
+            read >> srno; // 1st attemp to reading the file
+            read.ignore();
+            getline(read, sname);
+            getline(read, fname);
+            read >> gender;
+            read.ignore();
+            getline(read, dob);
+            read >> age;
+            read.ignore();
+            getline(read, city);
+            getline(read, department);
+            read >> semester;
+            read >> rolNo;
+            read >> gpa;
+            read.ignore();
+            getline(read, skills);
+            while (!read.eof())
+            {
+                arr_SerialNumber[i] = srno;
+                arr_ROLLnumber[i] = rolNo;
+                arr_SNAME[i] = sname;
+                arr_CGPA[i] = gpa;
+                arr_Department[i] = department;
+                arr_Semester[i] = semester;
+                i++;
+                read >> srno;
+                read.ignore();
+                getline(read, sname);
+                getline(read, fname);
+                read >> gender;
+                read.ignore();
+                getline(read, dob);
+                read >> age;
+                read.ignore();
+                getline(read, city);
+                getline(read, department);
+                read >> semester;
+                read >> rolNo;
+                read >> gpa;
+                read.ignore();
+                getline(read, skills);
+            }
+            read.close();
+            if (sort_type == 'R') // sorting data in the arrays according to Roll numbers
+            {
+                for (x = 0; x < globalID; x++) // bubble sorting
+                {
+                    for (y = 0; y < globalID - 1; y++)
+                    {
+                        if (arr_ROLLnumber[y] > arr_ROLLnumber[y + 1])
+                        {
+                            tempN = arr_ROLLnumber[y];
+                            tempS = arr_SNAME[y];
+                            arr_ROLLnumber[y] = arr_ROLLnumber[y + 1];
+                            arr_SNAME[y] = arr_SNAME[y + 1];
+                            arr_ROLLnumber[y + 1] = tempN;
+                            arr_SNAME[y + 1] = tempS;
+                        }
+                    }
+                }
+            }
+            else if (sort_type == '0') // sorting data in the arrays according to Roll numbers
+            {
+                int tempSRNO;
+                for (x = 0; x < globalID; x++) // bubble sorting
+                {
+                    for (y = 0; y < globalID - 1; y++)
+                    {
+                        if (arr_SerialNumber[y] > arr_SerialNumber[y + 1])
+                        {
+                            tempSRNO = arr_SerialNumber[y];
+                            tempN = arr_ROLLnumber[y];
+                            tempS = arr_SNAME[y];
+                            arr_SerialNumber[y] = arr_SerialNumber[y + 1];
+                            arr_ROLLnumber[y] = arr_ROLLnumber[y + 1];
+                            arr_SNAME[y] = arr_SNAME[y + 1];
+                            arr_SerialNumber[y + 1] = tempSRNO;
+                            arr_ROLLnumber[y + 1] = tempN;
+                            arr_SNAME[y + 1] = tempS;
+                        }
+                    }
+                }
+            }
+            else if (sort_type == 'N') // sorting data according to student's names
+            {
+                for (i = 0; i < globalID - 1; i++) // selection sorting
+                {
+                    for (x = i + 1; x < globalID; x++)
+                    {
+                        if (arr_SNAME[i][0] >= arr_SNAME[x][0])
+                        {
+                            if (arr_SNAME[i][0] > arr_SNAME[x][0])
+                            {
+                                tempS = arr_SNAME[i];
+                                tempN = arr_ROLLnumber[i];
+                                arr_SNAME[i] = arr_SNAME[x];
+                                arr_ROLLnumber[i] = arr_ROLLnumber[x];
+                                arr_SNAME[x] = tempS;
+                                arr_ROLLnumber[x] = tempN;
+                            }
+                            else if (arr_SNAME[i][0] == arr_SNAME[x][0])
+                            {
+                                int limit;
+                                if (arr_SNAME[i].length() > arr_SNAME[x].length())
+                                    limit = arr_SNAME[x].length();
+                                else
+                                    limit = arr_SNAME[i].length();
+                                for (y = 0; y < limit; y++) // iterates upto the smaller string's length()
+                                {
+                                    if (arr_SNAME[i][y] > arr_SNAME[x][y])
+                                    {
+                                        tempS = arr_SNAME[i];
+                                        tempN = arr_ROLLnumber[i];
+                                        arr_SNAME[i] = arr_SNAME[x];
+                                        arr_ROLLnumber[i] = arr_ROLLnumber[x];
+                                        arr_SNAME[x] = tempS;
+                                        arr_ROLLnumber[x] = tempN;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (sort_type == 'D') // sorting data according to department names
+            {
+                string tempD;
+                for (i = 0; i < globalID - 1; i++) // selection sorting
+                {
+                    for (x = i + 1; x < globalID; x++)
+                    {
+                        if (arr_Department[i][0] >= arr_Department[x][0])
+                        {
+                            if (arr_Department[i][0] > arr_Department[x][0])
+                            {
+                                tempD = arr_Department[i];
+                                arr_Department[i] = arr_Department[x];
+                                arr_Department[x] = tempD;
+                                tempS = arr_SNAME[i];
+                                arr_SNAME[i] = arr_SNAME[x];
+                                arr_SNAME[x] = tempS;
+                                tempN = arr_ROLLnumber[i];
+                                arr_ROLLnumber[i] = arr_ROLLnumber[x];
+                                arr_ROLLnumber[x] = tempN;
+                            }
+                            else if (arr_Department[i][0] == arr_Department[x][0])
+                            {
+                                int limit;
+                                if (arr_Department[i].length() > arr_Department[x].length())
+                                    limit = arr_Department[x].length();
+                                else
+                                    limit = arr_Department[i].length();
+                                for (y = 0; y < limit; y++) // iterates upto the smaller string's length()
+                                {
+                                    if (arr_Department[i][y] > arr_Department[x][y])
+                                    {
+                                        tempD = arr_Department[i];
+                                        arr_Department[i] = arr_Department[x];
+                                        arr_Department[x] = tempD;
+                                        tempS = arr_SNAME[i];
+                                        arr_SNAME[i] = arr_SNAME[x];
+                                        arr_SNAME[x] = tempS;
+                                        tempN = arr_ROLLnumber[i];
+                                        arr_ROLLnumber[i] = arr_ROLLnumber[x];
+                                        arr_ROLLnumber[x] = tempN;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (sort_type == 'S') // sorting data according to Semester number
+            {
+                int tempSM;
+                for (x = 0; x < globalID; x++)
+                {
+                    for (y = 0; y < globalID - 1; y++)
+                    {
+                        if (arr_Semester[y] < arr_Semester[y + 1])
+                        {
+                            tempSM = arr_Semester[y];
+                            tempN = arr_ROLLnumber[y];
+                            tempS = arr_SNAME[y];
+                            arr_Semester[y] = arr_Semester[y + 1];
+                            arr_ROLLnumber[y] = arr_ROLLnumber[y + 1];
+                            arr_SNAME[y] = arr_SNAME[y + 1];
+                            arr_Semester[y + 1] = tempSM;
+                            arr_ROLLnumber[y + 1] = tempN;
+                            arr_SNAME[y + 1] = tempS;
+                        }
+                    }
+                }
+            }
+            else if (sort_type == 'C') // sorting data according to obtained CGPA
+            {
+                float tempC;
+                for (x = 0; x < globalID; x++) // bubble sorting
+                {
+                    for (y = 0; y < globalID - 1; y++)
+                    {
+                        if (arr_CGPA[y] < arr_CGPA[y + 1])
+                        {
+                            tempC = arr_CGPA[y];
+                            tempN = arr_ROLLnumber[y];
+                            tempS = arr_SNAME[y];
+                            arr_CGPA[y] = arr_CGPA[y + 1];
+                            arr_ROLLnumber[y] = arr_ROLLnumber[y + 1];
+                            arr_SNAME[y] = arr_SNAME[y + 1];
+                            arr_CGPA[y + 1] = tempC;
+                            arr_ROLLnumber[y + 1] = tempN;
+                            arr_SNAME[y + 1] = tempS;
+                        }
+                    }
+                }
+            }
+            ofstream write("d:\\temp.txt", ios::app); // writing the sorted data into the file
+            if (write.fail())
+            {
+                cout << "\nError: File not created !!\n";
+                write.close();
+                read.close();
+            }
+            // sorting data into the files
+            for (x = 0; x < globalID; x++)
+            {
+                read.open("d:\\Students_Database.txt");
+                read >> srno;
+                read.ignore();
+                getline(read, sname);
+                getline(read, fname);
+                read >> gender;
+                read.ignore();
+                getline(read, dob);
+                read >> age;
+                read.ignore();
+                getline(read, city);
+                getline(read, department);
+                read >> semester;
+                read >> rolNo;
+                read >> gpa;
+                read.ignore();
+                getline(read, skills);
+                while (!read.eof())
+                {
+                    if (rolNo == arr_ROLLnumber[x] && sname == arr_SNAME[x])
+                    {
+                        write << srno << '\n';
+                        write << sname << '\n';
+                        write << fname << '\n';
+                        write << gender << '\n';
+                        write << dob << '\n';
+                        write << age << '\n';
+                        write << city << '\n';
+                        write << department << '\n';
+                        write << semester << '\n';
+                        write << rolNo << '\n';
+                        write << gpa << '\n';
+                        write << skills << '\n';
+                    }
+                    read >> srno;
+                    read.ignore();
+                    getline(read, sname);
+                    getline(read, fname);
+                    read >> gender;
+                    read.ignore();
+                    getline(read, dob);
+                    read >> age;
+                    read.ignore();
+                    getline(read, city);
+                    getline(read, department);
+                    read >> semester;
+                    read >> rolNo;
+                    read >> gpa;
+                    read.ignore();
+                    getline(read, skills);
+                }
+                read.close();
+            }
+            read.close();
+            write.close();
+            remove("d:\\Students_Database.txt");
+            rename("d:\\temp.txt", "d:\\Students_Database.txt");
+            cout << " ~\t  Record Sorted By Roll Numbers in Ascending Order!!! \n ~\t  ";
             system("pause");
         }
     }
@@ -275,39 +1046,49 @@ int main() // MAIN function
     system("cls");
     StudentDatabase sdb;
     char choice;
-    cout << "\n          ---------- Students Database ---------\n";
-    cout << "\n\t\t 1 : Display all records";
-    cout << "\n\t\t 2 : Update/Delete records";
-    cout << "\n\t\t 3 : Add new records";
-    cout << "\n\t\t 4 : Search in records";
-    cout << "\n\t\t 0 : Exit the SDB Program\n";
+    cout << "\n         ---------- Students Database ---------\n";
+    cout << "\n\t\t1 : Add new records";
+    cout << "\n\t\t2 : Search in record";
+    cout << "\n\t\t3 : Sort the database";
+    cout << "\n\t\t4 : Display all records";
+    cout << "\n\t\t5 : Update/Delete records";
+    cout << "\n\t\t0 : Exit the SDB Program\n";
 reselectMain:
-    cout << "\n\t\t ~   Enter your choice here :: ";
+    cout << "\n\t\t~   Enter your choice here :: ";
     cin >> choice;
-    if (choice == '0' || choice == 'o' || choice == 'O') // validating the given choice from menu
+    if (choice == '0') // validating the given choice from menu
     {
-        cout << "\t\t ~   Program exited successfully !!! \n\n";
+        cout << "\t\t~   Program exited successfully !!! \n\n";
         exit(0);
     }
     else if (choice == '1')
     {
-        sdb.DisplayFileRecords();
+        sdb.AddRecords();
         main();
     }
     else if (choice == '2')
     {
+        sdb.searchRecords();
+        main();
     }
     else if (choice == '3')
     {
-        sdb.AddRecords();
+        sdb.sortDATA();
         main();
     }
     else if (choice == '4')
     {
+        sdb.DisplayFileRecords();
+        main();
+    }
+    else if (choice == '5')
+    {
+        sdb.updateDeleteRecords();
+        main();
     }
     else
     {
-        cout << "\t\t ~   Error : invalid input by user";
+        cout << "\t\t~   Error : invalid input by user";
         goto reselectMain;
     }
     return 0;
