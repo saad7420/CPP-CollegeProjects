@@ -389,7 +389,7 @@ public:
             cin >> choice;
             if (choice == '0')
             {
-                cout << "\t\t ~   Program exited successfully !!! \n\n";
+                cout << "\t\t\t ~   Program exited successfully !!! \n\n";
                 exit(0);
             }
             else if (choice == '1')
@@ -427,6 +427,13 @@ private:
     {
         system("cls");
         char choice;
+        cout << "\n\t\t~   Do you know 'Name', 'Roll number' & 'Semester' ? (y/n) : ";
+        cin >> choice;
+        if (choice == 'n' || choice == 'N')
+        {
+            updateDeleteRecords();
+            // goto mainMenuLast;
+        }
         int given_rolnumber, given_semester, given_serial;
         string given_name, filed_name;
         bool found = 0, updated = 0;
@@ -434,9 +441,9 @@ private:
         cin.ignore();
         getline(cin, given_name);
         transform(given_name.begin(), given_name.end(), given_name.begin(), ::tolower);
-        cout << "\n\t\t~   Enter  Roll   Number : ";
+        cout << "\t\t~   Enter  Roll   Number : ";
         cin >> given_rolnumber;
-        cout << "\n\t\t~   Enter   Semester  No : ";
+        cout << "\t\t~   Enter   Semester  No : ";
         cin >> given_semester;
         // reading file data
         ifstream read("D:\\Students_Database.txt"); // old file
@@ -470,7 +477,7 @@ private:
         {
             filed_name = sname;
             transform(filed_name.begin(), filed_name.end(), filed_name.begin(), ::tolower);
-            if (given_rolnumber == rolNo && given_semester == semester && filed_name.find(given_name) < 51)
+            if (given_rolnumber == rolNo && given_semester == semester || filed_name.find(given_name) < 51)
             {
                 found = 1;
                 cout << endl;
@@ -492,7 +499,7 @@ private:
                     cout << "\n *\t Enter Student's Education Department   :: ";
                     getline(cin, new_department);
                     cout << " *\t Enter Student's Semester Number        :: ";
-                    cin >> new_department;
+                    cin >> new_semester;
                     cout << " *\t Enter Student's ID/Roll Number         :: ";
                     cin >> new_rolNo;
                     cin.ignore();
@@ -559,7 +566,7 @@ private:
                         cin >> choice;
                         if (choice == '0')
                         {
-                            cout << "\n\t\t~   Program exited successfully! \n";
+                            cout << "\t\t~   Program exited successfully! \n";
                             exit(0);
                         }
                         else if (choice == '1')
@@ -615,15 +622,18 @@ private:
             system("pause");
             updateRecords();
         }
+        if (updated)
+            cout << "\n\t\t~   success : Record Updated!";
+        else
+            cout << "\n\t\t~   success : record not changed!";
         read.close();
         write.close();
         remove("d:\\Students_Database.txt");
         rename("d:\\temp.txt", "d:\\Students_Database.txt");
-        cout << "\n\t\t~   success : Record Updated! \n\t\t~   ";
+        cout << "\n\t\t~   ";
         system("pause");
     mainMenuLast:
-        cout << "\n\t\t~   success : Record bot changed! \n\t\t~   ";
-        system("pause");
+        cout << "\n\t\t~   success : Record bot changed! \n";
     }
     void deleteRecords()
     {
@@ -872,30 +882,26 @@ private:
                 mn = date % 100;
             }
         }
-        // conversion from integer dates into a string
         temp_dob = to_string(dy) + "-" + to_string(mn) + "-" + to_string(yr);
         // calculating the age at the time of record added
-        char charDATE[12]; // to use in the strftime() of ctime, we always need char array
+        char charDATE[12]; // to use strftime(),we always need char array
         string presentDATE;
         int temp_age;
-        time_t t = time(0);                                // fetches the local time of machine
-        strftime(charDATE, 12, "%d/%m/%Y", localtime(&t)); // charDATE will be assigned dd/mm/yyyy date format
-        presentDATE = charDATE;                            // char to string conversion
-        // int dayPresent = stoi(presentDATE.substr(0, 2));   // days assignment
-        // int monthPresent = stoi(presentDATE.substr(3, 2)); // months assignment
-        int yearPresent = stoi(presentDATE.substr(6)); // years assignment
+        time_t t = time(0); // fetches the local time of machine
+        strftime(charDATE, 12, "%d/%m/%Y", localtime(&t));
+        presentDATE = charDATE;                           // char to string conversion
+        int yearPresent = stoi(presentDATE.substr(6, 4)); // years assignment
         temp_age = yearPresent - yr;
-        if (procedure == 'a') // if procedure is to add a new record
+        if (procedure == 'a') // add a new record
         {
             dob = temp_dob;
             age = temp_age;
         }
-        else if (procedure == 'u') // if procedure is to update an existing record
+        else // update an existing record
         {
             new_dob = temp_dob;
             new_age = temp_age;
         }
-        // would code soon for calculating exact age including months,days,weeks and regarding leap Year & other factors
     }
     void data_sorting_and_filing(char sort_type)
     {
@@ -1204,7 +1210,7 @@ private:
             write.close();
             remove("d:\\Students_Database.txt");
             rename("d:\\temp.txt", "d:\\Students_Database.txt");
-            cout << " ~\t  Record Sorted By Roll Numbers in Ascending Order!!! \n ~\t  ";
+            cout << " ~\t  Record Sorted successfully !!! \n ~\t  ";
             system("pause");
         }
     }
