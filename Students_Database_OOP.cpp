@@ -44,7 +44,7 @@ private:
     string sname, fname, department, skills, dob, new_dob, city; // new_dob : while updating
 
 public:
-    StudentDatabase() // constructor : to check and read if data is availabe previously
+    StudentDatabase() // constructor : to check and read if data is available previously
     {
         ifstream readf("D:\\Students_Database.txt");
         if (readf.fail())
@@ -210,7 +210,7 @@ public:
         }
         else if (choice == 'y' || choice == 'Y')
         {
-            WriteRecords(); // writing & saving the confirmed records for permanant future use in Student Database.txt file
+            WriteRecords(); // writing & saving the confirmed records for permanent future use in Student Database.txt file
             system("cls");
             cout << "\n          ---------- Students Database ---------\n\n";
             cout << "\t\t 1 : Add more Students\n";
@@ -402,19 +402,12 @@ public:
                 deleteRecords();
                 updateDeleteRecords();
             }
-            else if (choice == '3')
-            {
-                goto updateAgain;
-                updateDeleteRecords();
-            }
-            else
+            else if (choice != '3')
             {
                 cout << "\t\t ~   Error : invalid input by user\n\t\t ~   ";
                 system("pause");
                 updateDeleteRecords();
             }
-        updateAgain:
-            cout << "\t ~   Welcome Back to main menu\n";
         }
     }
     ~StudentDatabase()
@@ -630,10 +623,9 @@ private:
         write.close();
         remove("d:\\Students_Database.txt");
         rename("d:\\temp.txt", "d:\\Students_Database.txt");
+    mainMenuLast:
         cout << "\n\t\t~   ";
         system("pause");
-    mainMenuLast:
-        cout << "\n\t\t~   success : Record bot changed! \n";
     }
     void deleteRecords()
     {
@@ -851,23 +843,22 @@ private:
     {
         int dy, mn, yr; // to catch the user date of birth dd-mm-yyyy
         int date;
-        char dash = '-';
-        date = stoi(temp_dob); // string to integer conversion
-        if (dob.length() == 8) // calculations start here
+        date = stoi(temp_dob);      // string to integer conversion
+        if (temp_dob.length() == 8) // calculations start here
         {
             dy = date / 1000000;
             date %= 1000000;
             mn = date / 10000;
             yr = date % 10000;
         }
-        else if (dob.length() == 6)
+        else if (temp_dob.length() == 6)
         {
             dy = date / 100000;
             date %= 100000;
             mn = date / 10000;
             yr = date % 10000;
         }
-        if (dob.length() == 7)
+        if (temp_dob.length() == 7)
         {
             yr = date % 10000;
             date /= 10000;
@@ -882,7 +873,11 @@ private:
                 mn = date % 100;
             }
         }
-        temp_dob = to_string(dy) + "-" + to_string(mn) + "-" + to_string(yr);
+        // formatting the date with dashes and zeros
+        ostringstream formattedDate;
+        formattedDate << setfill('0') << setw(2) << dy << "-"
+                      << setw(2) << mn << "-" << yr;
+        temp_dob = formattedDate.str();
         // calculating the age at the time of record added
         char charDATE[12]; // to use strftime(),we always need char array
         string presentDATE;
@@ -1014,38 +1009,14 @@ private:
                 {
                     for (x = i + 1; x < globalID; x++)
                     {
-                        if (arr_SNAME[i][0] >= arr_SNAME[x][0])
+                        if (arr_SNAME[i] > arr_SNAME[x])
                         {
-                            if (arr_SNAME[i][0] > arr_SNAME[x][0])
-                            {
-                                tempS = arr_SNAME[i];
-                                tempN = arr_ROLLnumber[i];
-                                arr_SNAME[i] = arr_SNAME[x];
-                                arr_ROLLnumber[i] = arr_ROLLnumber[x];
-                                arr_SNAME[x] = tempS;
-                                arr_ROLLnumber[x] = tempN;
-                            }
-                            else if (arr_SNAME[i][0] == arr_SNAME[x][0])
-                            {
-                                int limit;
-                                if (arr_SNAME[i].length() > arr_SNAME[x].length())
-                                    limit = arr_SNAME[x].length();
-                                else
-                                    limit = arr_SNAME[i].length();
-                                for (y = 0; y < limit; y++) // iterates upto the smaller string's length()
-                                {
-                                    if (arr_SNAME[i][y] > arr_SNAME[x][y])
-                                    {
-                                        tempS = arr_SNAME[i];
-                                        tempN = arr_ROLLnumber[i];
-                                        arr_SNAME[i] = arr_SNAME[x];
-                                        arr_ROLLnumber[i] = arr_ROLLnumber[x];
-                                        arr_SNAME[x] = tempS;
-                                        arr_ROLLnumber[x] = tempN;
-                                        break;
-                                    }
-                                }
-                            }
+                            tempS = arr_SNAME[i];
+                            tempN = arr_ROLLnumber[i];
+                            arr_SNAME[i] = arr_SNAME[x];
+                            arr_ROLLnumber[i] = arr_ROLLnumber[x];
+                            arr_SNAME[x] = tempS;
+                            arr_ROLLnumber[x] = tempN;
                         }
                     }
                 }
@@ -1057,44 +1028,17 @@ private:
                 {
                     for (x = i + 1; x < globalID; x++)
                     {
-                        if (arr_Department[i][0] >= arr_Department[x][0])
+                        if (arr_Department[i] > arr_Department[x])
                         {
-                            if (arr_Department[i][0] > arr_Department[x][0])
-                            {
-                                tempD = arr_Department[i];
-                                arr_Department[i] = arr_Department[x];
-                                arr_Department[x] = tempD;
-                                tempS = arr_SNAME[i];
-                                arr_SNAME[i] = arr_SNAME[x];
-                                arr_SNAME[x] = tempS;
-                                tempN = arr_ROLLnumber[i];
-                                arr_ROLLnumber[i] = arr_ROLLnumber[x];
-                                arr_ROLLnumber[x] = tempN;
-                            }
-                            else if (arr_Department[i][0] == arr_Department[x][0])
-                            {
-                                int limit;
-                                if (arr_Department[i].length() > arr_Department[x].length())
-                                    limit = arr_Department[x].length();
-                                else
-                                    limit = arr_Department[i].length();
-                                for (y = 0; y < limit; y++) // iterates upto the smaller string's length()
-                                {
-                                    if (arr_Department[i][y] > arr_Department[x][y])
-                                    {
-                                        tempD = arr_Department[i];
-                                        arr_Department[i] = arr_Department[x];
-                                        arr_Department[x] = tempD;
-                                        tempS = arr_SNAME[i];
-                                        arr_SNAME[i] = arr_SNAME[x];
-                                        arr_SNAME[x] = tempS;
-                                        tempN = arr_ROLLnumber[i];
-                                        arr_ROLLnumber[i] = arr_ROLLnumber[x];
-                                        arr_ROLLnumber[x] = tempN;
-                                        break;
-                                    }
-                                }
-                            }
+                            tempD = arr_Department[i];
+                            tempS = arr_SNAME[i];
+                            tempN = arr_ROLLnumber[i];
+                            arr_Department[i] = arr_Department[x];
+                            arr_SNAME[i] = arr_SNAME[x];
+                            arr_ROLLnumber[i] = arr_ROLLnumber[x];
+                            arr_Department[x] = tempD;
+                            arr_SNAME[x] = tempS;
+                            arr_ROLLnumber[x] = tempN;
                         }
                     }
                 }
