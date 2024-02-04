@@ -370,6 +370,7 @@ public:
     }
     void updateDeleteRecords()
     {
+        system("cls");
         if (globalID == 0)
         {
             cout << "\t ~   Error : No Records available yet !!!\n";
@@ -378,7 +379,6 @@ public:
         }
         else
         {
-            system("cls");
             char choice;
             cout << "\n\t\t-------- Updating the Database ---------\n\n";
             cout << "\n\t\t\t 1 : Update Records";
@@ -408,6 +408,9 @@ public:
                 system("pause");
                 updateDeleteRecords();
             }
+            else
+            {
+            }
         }
     }
     ~StudentDatabase()
@@ -423,172 +426,34 @@ private:
         cout << "\n\t\t~   Do you know 'Name', 'Roll number' & 'Semester' ? (y/n) : ";
         cin >> choice;
         if (choice == 'n' || choice == 'N')
-        {
-            updateDeleteRecords();
-            // goto mainMenuLast;
+        { // do nothing, just go back
         }
-        int given_rolnumber, given_semester, given_serial;
-        string given_name, filed_name;
-        bool found = 0, updated = 0;
-        cout << "\n\t\t~   Enter Student's Name : ";
-        cin.ignore();
-        getline(cin, given_name);
-        transform(given_name.begin(), given_name.end(), given_name.begin(), ::tolower);
-        cout << "\t\t~   Enter  Roll   Number : ";
-        cin >> given_rolnumber;
-        cout << "\t\t~   Enter   Semester  No : ";
-        cin >> given_semester;
-        // reading file data
-        ifstream read("D:\\Students_Database.txt"); // old file
-        ofstream write("D:\\temp.txt", ios::app);   // new file
-        if (read.fail() || write.fail())
+        else
         {
-            cout << " ~   Error : (.txt) file not accessible !!!\n";
-            read.close();
-            write.close();
-            system("pause");
-            updateDeleteRecords();
-        }
-        // 1st attemp to reading the file
-        read >> srno;
-        read.ignore();
-        getline(read, sname);
-        getline(read, fname);
-        read >> gender;
-        read.ignore();
-        getline(read, dob);
-        read >> age;
-        read.ignore();
-        getline(read, city);
-        getline(read, department);
-        read >> semester;
-        read >> rolNo;
-        read >> gpa;
-        read.ignore();
-        getline(read, skills);
-        while (!read.eof())
-        {
-            filed_name = sname;
-            transform(filed_name.begin(), filed_name.end(), filed_name.begin(), ::tolower);
-            if (given_rolnumber == rolNo && given_semester == semester || filed_name.find(given_name) < 51)
+            int given_rolnumber, given_semester, given_serial;
+            string given_name, filed_name;
+            bool found = 0, updated = 0;
+            cout << "\n\t\t~   Enter Student's Name : ";
+            cin.ignore();
+            getline(cin, given_name);
+            transform(given_name.begin(), given_name.end(), given_name.begin(), ::tolower);
+            cout << "\t\t~   Enter  Roll   Number : ";
+            cin >> given_rolnumber;
+            cout << "\t\t~   Enter   Semester  No : ";
+            cin >> given_semester;
+            // reading file data
+            ifstream read("D:\\Students_Database.txt"); // old file
+            ofstream write("D:\\temp.txt", ios::app);   // new file
+            if (read.fail() || write.fail())
             {
-                found = 1;
-                cout << endl;
-                row_design(1); // printing the output designs
-                row_design(0);
-                row_design(2);
-                DisplayRecords();
-                cout << endl;
-                cout << "\n\t\t~   Do you want to update this? (y/n) : ";
-                cin >> choice;
-                if (choice == 'y' || choice == 'Y')
-                {
-                    int new_rolNo, new_semester, new_serial;
-                    float new_gpa;
-                    char new_gender;
-                    string new_sname, new_fname, new_city, new_skills, new_department;
-                    new_serial = srno;
-                    cin.ignore();
-                    cout << "\n *\t Enter Student's Education Department   :: ";
-                    getline(cin, new_department);
-                    cout << " *\t Enter Student's Semester Number        :: ";
-                    cin >> new_semester;
-                    cout << " *\t Enter Student's ID/Roll Number         :: ";
-                    cin >> new_rolNo;
-                    cin.ignore();
-                    cout << " *\t Enter Student's Name                   :: ";
-                    getline(cin, new_sname);
-                    cout << " *\t Enter Student's Father Name            :: ";
-                    getline(cin, new_fname);
-                    cout << " *\t Enter Date of Birth (DDMMYYYY)         :: ";
-                    getline(cin, new_dob); // this is not local variable
-                    cout << " *\t Enter Student's gender M/F/O/N         :: ";
-                    cin >> new_gender;
-                    cout << " *\t Enter current maintained CGPA          :: ";
-                    cin >> new_gpa;
-                    cin.ignore();
-                    cout << " *\t Enter Student's residence city name    :: ";
-                    getline(cin, new_city);
-                    cout << " *\t Enter Student's Extracurricular Skills :: ";
-                    getline(cin, new_skills);
-                    date_format(new_dob, 'u'); // procedure = 'u': update
-                    row_design(1);
-                    row_design(0);
-                    row_design(2);
-                    cout << ' ' << setw(3) << new_serial
-                         << '|' << setw(21) << left << new_sname.substr(0, 21)
-                         << '|' << setw(21) << left << new_fname.substr(0, 21)
-                         << '|' << setw(11) << left << new_dob.substr(0, 11)
-                         << '|' << setw(24) << left << new_department.substr(0, 24)
-                         << "|  " << setw(3) << left << new_semester
-                         << "| " << setw(4) << left << new_rolNo
-                         << "| " << setw(4) << left << new_gender
-                         << "| " << setw(4) << left << new_age
-                         << "| " << setw(5) << left << new_gpa
-                         << '|' << setw(9) << left << new_city.substr(0, 9)
-                         << '|' << setw(13) << left << new_skills.substr(0, 13) << '\n';
-                    cout << "\n\t\t~   Are you sure to update this? (y/n) : ";
-                    cin >> choice;
-                    if (choice == 'y' || choice == 'Y')
-                    {
-                        updated = 1;
-                        write << new_serial << '\n'; // writing in new file
-                        write << new_sname << '\n';
-                        write << new_fname << '\n';
-                        write << new_gender << '\n';
-                        write << new_dob << '\n';
-                        write << new_age << '\n'; // this is not local variable
-                        write << new_city << '\n';
-                        write << new_department << '\n';
-                        write << new_semester << '\n';
-                        write << new_rolNo << '\n';
-                        write << new_gpa << '\n';
-                        write << new_skills << '\n';
-                        goto skippedWriting;
-                    }
-                    else
-                    {
-                        read.close();
-                        write.close();
-                        remove("d:\\temp.txt");
-                        cout << "\n\t\t~   success : Record bot changed! \n";
-                        cout << "\n\t\t~   1. Looking for another record";
-                        cout << "\n\t\t~   2. Back to main menu";
-                        cout << "\n\t\t~   0. Exit Program \n";
-                        cout << "\n\t\t~   Enter choice : ";
-                        cin >> choice;
-                        if (choice == '0')
-                        {
-                            cout << "\t\t~   Program exited successfully! \n";
-                            exit(0);
-                        }
-                        else if (choice == '1')
-                        {
-                            updateRecords();
-                        }
-                        else if (choice == '2')
-                        {
-                            goto mainMenuLast;
-                        }
-                        else
-                            goto mainMenuLast;
-                    }
-                }
+                cout << " ~   Error : (.txt) file not accessible !!!\n";
+                read.close();
+                write.close();
+                system("pause");
+                updateDeleteRecords();
             }
-            write << srno << '\n'; // writing in new file
-            write << sname << '\n';
-            write << fname << '\n';
-            write << gender << '\n';
-            write << dob << '\n';
-            write << age << '\n';
-            write << city << '\n';
-            write << department << '\n';
-            write << semester << '\n';
-            write << rolNo << '\n';
-            write << gpa << '\n';
-            write << skills << '\n';
-        skippedWriting:
-            read >> srno; // reading next records from old file
+            // 1st attemp to reading the file
+            read >> srno;
             read.ignore();
             getline(read, sname);
             getline(read, fname);
@@ -604,31 +469,290 @@ private:
             read >> gpa;
             read.ignore();
             getline(read, skills);
-        }
-        if (!found) // if record not found
-        {
+            while (!read.eof())
+            {
+                filed_name = sname;
+                transform(filed_name.begin(), filed_name.end(), filed_name.begin(), ::tolower);
+                if (given_rolnumber == rolNo && given_semester == semester || filed_name.find(given_name) < 51)
+                {
+                    found = 1;
+                    cout << endl;
+                    row_design(1); // printing the output designs
+                    row_design(0);
+                    row_design(2);
+                    DisplayRecords();
+                    cout << endl;
+                    cout << "\n\t\t~   Do you want to update this? (y/n) : ";
+                    cin >> choice;
+                    if (choice == 'y' || choice == 'Y')
+                    {
+                        int new_rolNo, new_semester, new_serial;
+                        float new_gpa;
+                        char new_gender;
+                        string new_sname, new_fname, new_city, new_skills, new_department;
+                        new_serial = srno;
+                        cin.ignore();
+                        cout << "\n *\t Enter Student's Education Department   :: ";
+                        getline(cin, new_department);
+                        cout << " *\t Enter Student's Semester Number        :: ";
+                        cin >> new_semester;
+                        cout << " *\t Enter Student's ID/Roll Number         :: ";
+                        cin >> new_rolNo;
+                        cin.ignore();
+                        cout << " *\t Enter Student's Name                   :: ";
+                        getline(cin, new_sname);
+                        cout << " *\t Enter Student's Father Name            :: ";
+                        getline(cin, new_fname);
+                        cout << " *\t Enter Date of Birth (DDMMYYYY)         :: ";
+                        getline(cin, new_dob); // this is not local variable
+                        cout << " *\t Enter Student's gender M/F/O/N         :: ";
+                        cin >> new_gender;
+                        cout << " *\t Enter current maintained CGPA          :: ";
+                        cin >> new_gpa;
+                        cin.ignore();
+                        cout << " *\t Enter Student's residence city name    :: ";
+                        getline(cin, new_city);
+                        cout << " *\t Enter Student's Extracurricular Skills :: ";
+                        getline(cin, new_skills);
+                        date_format(new_dob, 'u'); // procedure = 'u': update
+                        row_design(1);
+                        row_design(0);
+                        row_design(2);
+                        cout << ' ' << setw(3) << new_serial
+                             << '|' << setw(21) << left << new_sname.substr(0, 21)
+                             << '|' << setw(21) << left << new_fname.substr(0, 21)
+                             << '|' << setw(11) << left << new_dob.substr(0, 11)
+                             << '|' << setw(24) << left << new_department.substr(0, 24)
+                             << "|  " << setw(3) << left << new_semester
+                             << "| " << setw(4) << left << new_rolNo
+                             << "| " << setw(4) << left << new_gender
+                             << "| " << setw(4) << left << new_age
+                             << "| " << setw(5) << left << new_gpa
+                             << '|' << setw(9) << left << new_city.substr(0, 9)
+                             << '|' << setw(13) << left << new_skills.substr(0, 13) << '\n';
+                        cout << "\n\t\t~   Are you sure to update this? (y/n) : ";
+                        cin >> choice;
+                        if (choice == 'y' || choice == 'Y')
+                        {
+                            updated = 1;
+                            write << new_serial << '\n'; // writing in new file
+                            write << new_sname << '\n';
+                            write << new_fname << '\n';
+                            write << new_gender << '\n';
+                            write << new_dob << '\n';
+                            write << new_age << '\n'; // this is not local variable
+                            write << new_city << '\n';
+                            write << new_department << '\n';
+                            write << new_semester << '\n';
+                            write << new_rolNo << '\n';
+                            write << new_gpa << '\n';
+                            write << new_skills << '\n';
+                            goto skippedWriting;
+                        }
+                        else
+                        {
+                            read.close();
+                            write.close();
+                            remove("d:\\temp.txt");
+                            cout << "\n\t\t~   success : Record bot changed! \n";
+                            cout << "\n\t\t~   1. Looking for another record";
+                            cout << "\n\t\t~   2. Back to main menu";
+                            cout << "\n\t\t~   0. Exit Program \n";
+                            cout << "\n\t\t~   Enter choice : ";
+                            cin >> choice;
+                            if (choice == '0')
+                            {
+                                cout << "\t\t~   Program exited successfully! \n";
+                                exit(0);
+                            }
+                            else if (choice == '1')
+                            {
+                                updateRecords();
+                            }
+                            else if (choice == '2')
+                            {
+                                goto mainMenuLast;
+                            }
+                            else
+                                goto mainMenuLast;
+                        }
+                    }
+                }
+                write << srno << '\n'; // writing in new file
+                write << sname << '\n';
+                write << fname << '\n';
+                write << gender << '\n';
+                write << dob << '\n';
+                write << age << '\n';
+                write << city << '\n';
+                write << department << '\n';
+                write << semester << '\n';
+                write << rolNo << '\n';
+                write << gpa << '\n';
+                write << skills << '\n';
+            skippedWriting:
+                read >> srno; // reading next records from old file
+                read.ignore();
+                getline(read, sname);
+                getline(read, fname);
+                read >> gender;
+                read.ignore();
+                getline(read, dob);
+                read >> age;
+                read.ignore();
+                getline(read, city);
+                getline(read, department);
+                read >> semester;
+                read >> rolNo;
+                read >> gpa;
+                read.ignore();
+                getline(read, skills);
+            }
+            if (!found) // if record not found
+            {
+                read.close();
+                write.close();
+                remove("d:\\temp.txt");
+                cout << "\n\t\t~   Error : Record not found! \n";
+                cout << "\n\t\t~   Check again (input carefully) \n\t\t~   ";
+                system("pause");
+                updateRecords();
+            }
+            if (updated)
+                cout << "\n\t\t~   success : Record Updated!";
+            else
+                cout << "\n\t\t~   success : record not changed!";
             read.close();
             write.close();
-            remove("d:\\temp.txt");
-            cout << "\n\t\t~   Error : Record not found! \n";
-            cout << "\n\t\t~   Check again (input carefully) \n\t\t~   ";
+            remove("d:\\Students_Database.txt");
+            rename("d:\\temp.txt", "d:\\Students_Database.txt");
+        mainMenuLast:
+            cout << "\n\t\t~   ";
             system("pause");
-            updateRecords();
         }
-        if (updated)
-            cout << "\n\t\t~   success : Record Updated!";
-        else
-            cout << "\n\t\t~   success : record not changed!";
-        read.close();
-        write.close();
-        remove("d:\\Students_Database.txt");
-        rename("d:\\temp.txt", "d:\\Students_Database.txt");
-    mainMenuLast:
-        cout << "\n\t\t~   ";
-        system("pause");
     }
     void deleteRecords()
     {
+        system("cls");
+        char choice;
+        cout << "\n\t\t~   Do you know 'Name', 'Roll number' & 'Semester' ? (y/n) : ";
+        cin >> choice;
+        if (choice == 'n' || choice == 'N')
+        { // do nothing, just go back
+        }
+        else
+        {
+            int given_rolnumber, given_semester, given_serial;
+            string given_name, filed_name;
+            bool found = 0, deleted = 0;
+            cout << "\n\t\t~   Enter Student's Name : ";
+            cin.ignore();
+            getline(cin, given_name);
+            transform(given_name.begin(), given_name.end(), given_name.begin(), ::tolower);
+            cout << "\t\t~   Enter  Roll   Number : ";
+            cin >> given_rolnumber;
+            cout << "\t\t~   Enter   Semester  No : ";
+            cin >> given_semester;
+            // reading file data
+            ifstream read("D:\\Students_Database.txt");  // old file
+            ofstream write("D:\\tempDel.txt", ios::app); // new file
+            if (read.fail() || write.fail())
+            {
+                cout << " ~   Error : (.txt) file not accessible !!!\n";
+                read.close();
+                write.close();
+                system("pause");
+                updateDeleteRecords();
+            }
+            // 1st attemp to reading the file
+            read >> srno;
+            read.ignore();
+            getline(read, sname);
+            getline(read, fname);
+            read >> gender;
+            read.ignore();
+            getline(read, dob);
+            read >> age;
+            read.ignore();
+            getline(read, city);
+            getline(read, department);
+            read >> semester;
+            read >> rolNo;
+            read >> gpa;
+            read.ignore();
+            getline(read, skills);
+            while (!read.eof())
+            {
+                filed_name = sname;
+                transform(filed_name.begin(), filed_name.end(), filed_name.begin(), ::tolower);
+                if (given_rolnumber == rolNo && given_semester == semester || filed_name.find(given_name) < 51)
+                {
+                    found = 1;
+                    cout << endl;
+                    row_design(1); // printing the output designs
+                    row_design(0);
+                    row_design(2);
+                    DisplayRecords();
+                    cout << endl;
+                    cout << "\n\t\t~   Do you want to Delete this? (y/n) : ";
+                    cin >> choice;
+                    if (choice == 'y' || choice == 'Y')
+                    {
+                        deleted = 1;
+                        goto skipDeleting;
+                    }
+                }
+                write << srno << '\n'; // writing in new file
+                write << sname << '\n';
+                write << fname << '\n';
+                write << gender << '\n';
+                write << dob << '\n';
+                write << age << '\n';
+                write << city << '\n';
+                write << department << '\n';
+                write << semester << '\n';
+                write << rolNo << '\n';
+                write << gpa << '\n';
+                write << skills << '\n';
+            skipDeleting:
+                read >> srno; // reading next records from old file
+                read.ignore();
+                getline(read, sname);
+                getline(read, fname);
+                read >> gender;
+                read.ignore();
+                getline(read, dob);
+                read >> age;
+                read.ignore();
+                getline(read, city);
+                getline(read, department);
+                read >> semester;
+                read >> rolNo;
+                read >> gpa;
+                read.ignore();
+                getline(read, skills);
+            }
+            if (!found) // if record not found
+            {
+                read.close();
+                write.close();
+                remove("d:\\tempDel.txt");
+                cout << "\n\t\t~   Error : Record not found! \n";
+                cout << "\n\t\t~   Check again (input carefully) \n\t\t~   ";
+                system("pause");
+                updateRecords();
+            }
+            if (deleted)
+                cout << "\n\t\t~   success : Record Deleted!";
+            else
+                cout << "\n\t\t~   success : record not changed!";
+            read.close();
+            write.close();
+            remove("d:\\Students_Database.txt");
+            rename("d:\\tempDel.txt", "d:\\Students_Database.txt");
+            cout << "\n\t\t~   ";
+            system("pause");
+        }
     }
     void DisplayRecords() // Display runtime records
     {
