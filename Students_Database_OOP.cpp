@@ -415,7 +415,7 @@ public:
     }
     ~StudentDatabase()
     {
-        cout << "\n\n                         CodeBY: Muhammad Afnan Hassan #ITBatch1st\n\n\n";
+        cout << "\n\t\t~   CodeBY: Muhammad Afnan Hassan #ITBatch1st\n\n";
     }
 
 private:
@@ -1302,6 +1302,7 @@ reselectMain:
     if (choice == '0') // validating the given choice from menu
     {
         cout << "\t\t~   Program exited successfully !!! \n\n";
+        sdb.~StudentDatabase();
         exit(0);
     }
     else if (choice == '1')
